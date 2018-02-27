@@ -20,8 +20,6 @@ public class QueueBrowse
     private Session qsession;
     private QueueBrowser qbrowser;
 
-
-
     @GET
     @Path("/browse")
     @Produces({ "application/json" })
