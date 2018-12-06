@@ -101,10 +101,10 @@
                     <classpathScope>test</classpathScope>
                     <mainClass>org.jboss.as.quickstarts.picketlink.WSTrustClientExample</mainClass>
                     <executable>java</executable>
-                    <arguments>
+                    <!--arguments>
                         <argument>UserA</argument>
                         <argument>PassA</argument>
-                    </arguments>
+                    </arguments-->
                 </configuration>
                 <executions>
                     <execution>

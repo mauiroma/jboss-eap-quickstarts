@@ -16,7 +16,7 @@
  */
 package org.jboss.as.quickstarts.picketlink;
 
-import org.picketlink.common.exceptions.fed.WSTrustException;
+import com.sun.security.auth.UserPrincipal;
 import org.picketlink.common.util.DocumentUtil;
 import org.picketlink.identity.federation.api.wstrust.WSTrustClient;
 import org.picketlink.identity.federation.api.wstrust.WSTrustClient.SecurityInfo;
@@ -30,34 +30,75 @@ import org.w3c.dom.Element;
  *
  */
 public class WSTrustClientExample {
+    String userName ="";
+    String password = "";
 
-    public static void main(String[] args) throws Exception {
+    public WSTrustClientExample(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+    }
 
-        String userName = (args.length > 0 ? args[0] : "tomcat");
-        String password = (args.length > 1 ? args[1] : "tomcat");
-
-        // Step 1: Create a WS Trust Client
-        WSTrustClient client = new WSTrustClient("PicketLinkSTS", "PicketLinkSTSPort", "http://localhost:8080/picketlink-sts/PicketLinkSTS",
-            new SecurityInfo(userName, password));
+    private Element getSAMLV2(){
         Element assertionElement = null;
         try {
+            WSTrustClient client = new WSTrustClient("PicketLinkSTS", "PicketLinkSTSPort", "http://localhost:8080/picketlink-sts/PicketLinkSTS",
+                    new SecurityInfo(userName, password));
             System.out.println("Invoking token service to get SAML assertion for user:" + userName + " with password:" + password);
             // Step 2: Get a SAML2 Assertion Token from the PicketLink STS
             assertionElement = client.issueToken(SAMLUtil.SAML2_TOKEN_TYPE);
             System.out.println("SAML assertion for user:" + userName + " successfully obtained!");
-        } catch (WSTrustException wse) {
-            System.out.println("Unable to issue assertion: " + wse.getMessage());
-            wse.printStackTrace();
-            System.exit(1);
         } catch (Exception e) {
-            System.out.println("Problem:" + e.getMessage());
             e.printStackTrace();
-            System.exit(2);
+            System.err.println(e.getMessage());
         }
-
-        // Step 3: Display the SAML2 token
-        String el = DocumentUtil.getDOMElementAsString(assertionElement);
-        System.out.println(el);
+        return assertionElement;
     }
 
+    private Element getSAMLV1(){
+        Element assertionElement = null;
+        try {
+            WSTrustClient client = new WSTrustClient("PicketLinkSTS", "PicketLinkSTSPort", "http://localhost:8080/picketlink-sts/PicketLinkSTS",
+                    new SecurityInfo(userName, password));
+            System.out.println("Invoking token service to get SAML assertion for user:" + userName + " with password:" + password);
+            // Step 2: Get a SAML2 Assertion Token from the PicketLink STS
+            assertionElement = client.issueToken(SAMLUtil.SAML11_TOKEN_TYPE);
+            System.out.println("SAML assertion for user:" + userName + " successfully obtained!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+        }
+        return assertionElement;
+    }
+
+    private Element getSAMLV1Behalf(){
+        Element assertionElement = null;
+        try {
+            WSTrustClient client = new WSTrustClient("PicketLinkSTS", "PicketLinkSTSPort", "http://localhost:8080/picketlink-sts/PicketLinkSTS",
+                    new SecurityInfo(userName, password));
+            System.out.println("Invoking token service to get SAML assertion for user:" + userName + " with password:" + password);
+            // Step 2: Get a SAML2 Assertion Token from the PicketLink STS
+            UserPrincipal principal = new UserPrincipal("maui");
+            assertionElement = client.issueTokenOnBehalfOf("http://localhost:8080/picketlink-sts/PicketLinkSTS", SAMLUtil.SAML11_BEARER_URI, principal);
+            System.out.println("SAML assertion for user:" + userName + " successfully obtained!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+        }
+        return assertionElement;
+    }
+
+
+    public static void main(String[] args) throws Exception {
+        String userName = (args.length > 0 ? args[0] : "jbadmin");
+        System.out.println(userName);
+        String password = (args.length > 1 ? args[1] : "password");
+        System.out.println(password);
+        WSTrustClientExample clientExample =  new WSTrustClientExample(userName,password);
+        System.out.println("SAML V2");
+        System.out.println(DocumentUtil.getDOMElementAsString(clientExample.getSAMLV2()));
+        System.out.println("SAML V1");
+        System.out.println(DocumentUtil.getDOMElementAsString(clientExample.getSAMLV1()));
+        System.out.println("SAML V1 Behalf");
+        System.out.println(DocumentUtil.getDOMElementAsString(clientExample.getSAMLV1Behalf()));
+    }
 }
