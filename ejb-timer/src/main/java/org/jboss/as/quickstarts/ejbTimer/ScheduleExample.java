@@ -16,10 +16,9 @@
  */
 package org.jboss.as.quickstarts.ejbTimer;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import java.time.LocalDateTime;
 
 /**
  * Demonstrates how to use the EJB's @Schedule.
@@ -29,11 +28,10 @@ import javax.ejb.Singleton;
 @Singleton
 public class ScheduleExample {
 
-    @Schedule(second = "*/6", minute = "*", hour = "*", persistent = false)
+    @Schedule(second = "*/6", minute = "*", hour = "*", persistent = true)
     public void doWork() {
-        Date currentTime = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
-        System.out.println("ScheduleExample.doWork() invoked at " + simpleDateFormat.format(currentTime));
+        LocalDateTime currentTime = LocalDateTime.now();
+        System.out.println("ScheduleExample.doWork() invoked at " + currentTime);
     }
 
 }

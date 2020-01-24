@@ -33,14 +33,17 @@ import java.util.Hashtable;
  */
 public class RemoteEJBClient {
 
-    private static final String HTTP = "http";
+    private static final String HTTP = "_true";
+
+    private static final String HOST = "localhost";
+
 
     public static void main(String[] args) throws Exception {
         // Invoke a stateless bean
         invokeStatelessBean();
 
         // Invoke a stateful bean
-        invokeStatefulBean();
+        //invokeStatefulBean();
     }
 
     /**
@@ -110,12 +113,12 @@ public class RemoteEJBClient {
     private static RemoteCalculator lookupRemoteStatelessCalculator() throws NamingException {
         final Hashtable<String, String> jndiProperties = new Hashtable<>();
         jndiProperties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-        if(Boolean.getBoolean(HTTP)) {
-            //use HTTP based invocation. Each invocation will be a HTTP request
-            jndiProperties.put(Context.PROVIDER_URL,"http://localhost:8080/wildfly-services");
+        if(Boolean.parseBoolean(HTTP)) {
+            System.out.println("use HTTP based invocation. Each invocation will be a HTTP request");
+            jndiProperties.put(Context.PROVIDER_URL,"http://"+HOST+":8080/wildfly-services");
         } else {
-            //use HTTP upgrade, an initial upgrade requests is sent to upgrade to the remoting protocol
-            jndiProperties.put(Context.PROVIDER_URL,"remote+http://localhost:8080");
+            System.out.println("use HTTP upgrade, an initial upgrade requests is sent to upgrade to the remoting protocol");
+            jndiProperties.put(Context.PROVIDER_URL,"remote+http://"+HOST+":8080");
         }
         final Context context = new InitialContext(jndiProperties);
 
@@ -138,7 +141,7 @@ public class RemoteEJBClient {
         // the whole package name.
 
         // let's do the lookup
-        return (RemoteCalculator) context.lookup("ejb:/ejb-remote-server-side/CalculatorBean!"
+        return (RemoteCalculator) context.lookup("ejb:/server-side/CalculatorBean!"
             + RemoteCalculator.class.getName());
     }
 
@@ -152,12 +155,12 @@ public class RemoteEJBClient {
         final Hashtable<String, String> jndiProperties = new Hashtable<>();
         //jndiProperties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
         jndiProperties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-        if(Boolean.getBoolean(HTTP)) {
-            //use HTTP based invocation. Each invocation will be a HTTP request
-            jndiProperties.put(Context.PROVIDER_URL,"http://localhost:8080/wildfly-services");
+        if(Boolean.parseBoolean(HTTP)) {
+            System.out.println("use HTTP based invocation. Each invocation will be a HTTP request");
+            jndiProperties.put(Context.PROVIDER_URL,"http://"+HOST+":8080/wildfly-services");
         } else {
-            //use HTTP upgrade, an initial upgrade requests is sent to upgrade to the remoting protocol
-            jndiProperties.put(Context.PROVIDER_URL,"remote+http://localhost:8080");
+            System.out.println("use HTTP upgrade, an initial upgrade requests is sent to upgrade to the remoting protocol");
+            jndiProperties.put(Context.PROVIDER_URL,"remote+http://"+HOST+":8080");
         }
         final Context context = new InitialContext(jndiProperties);
 
@@ -180,7 +183,7 @@ public class RemoteEJBClient {
         // the whole package name.
 
         // let's do the lookup
-        return (RemoteCounter) context.lookup("ejb:/ejb-remote-server-side/CounterBean!"
+        return (RemoteCounter) context.lookup("ejb:/server-side/CounterBean!"
             + RemoteCounter.class.getName() + "?stateful");
     }
 }

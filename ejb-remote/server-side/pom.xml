@@ -23,7 +23,7 @@
         <version>7.2.0.GA</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>ejb-remote-server-side</artifactId>
+    <artifactId>server-side</artifactId>
     <packaging>ejb</packaging>
     <name>Quickstart: ejb-remote - server-side</name>
     <description>This project demonstrates how to access an EJB from a remote client; this is the server side POM file</description>
@@ -52,6 +52,8 @@
             <artifactId>jboss-ejb-api_3.2_spec</artifactId>
             <scope>provided</scope>
         </dependency>
+
+
 
     </dependencies>
 

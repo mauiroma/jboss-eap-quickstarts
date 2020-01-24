@@ -16,6 +16,9 @@
  */
 package org.jboss.as.quickstart.hibernate.controller;
 
+import org.jboss.as.quickstart.hibernate.model.Member;
+import org.jboss.as.quickstart.hibernate.service.MemberRegistration;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
@@ -23,9 +26,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.jboss.as.quickstart.hibernate.model.Member;
-import org.jboss.as.quickstart.hibernate.service.MemberRegistration;
 
 /**
  * Registers a new Member
@@ -55,7 +55,7 @@ public class MemberController {
         try {
             memberRegistration.register(newMember);
             facesContext.addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful"));
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered! on node ["+System.getProperty("jboss.node.name")+"]", "Registration successful"));
             initNewMember();
         } catch (Exception e) {
             String errorMessage = getRootErrorMessage(e);

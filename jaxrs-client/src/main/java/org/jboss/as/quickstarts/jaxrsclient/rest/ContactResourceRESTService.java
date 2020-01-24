@@ -16,21 +16,14 @@
  */
 package org.jboss.as.quickstarts.jaxrsclient.rest;
 
+import org.jboss.as.quickstarts.jaxrsclient.model.Contact;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.jboss.as.quickstarts.jaxrsclient.model.Contact;
 
 @Path("/contacts")
 public class ContactResourceRESTService {
@@ -45,7 +38,6 @@ public class ContactResourceRESTService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createContact(Contact contact) {
-
         Response.ResponseBuilder builder = null;
         Long nextId = contactsRepository.keySet().size() + 1L;
         try {

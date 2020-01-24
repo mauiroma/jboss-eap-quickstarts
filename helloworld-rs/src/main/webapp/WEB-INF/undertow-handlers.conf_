@@ -1,0 +1,1 @@
+ip-access-control(default-allow=false, acl={'127.0.0.1 allow', '127.0.0.2 allow'})

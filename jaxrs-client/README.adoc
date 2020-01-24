@@ -25,6 +25,24 @@ This client "calls" many `POST`, `GET`, and `DELETE` operations using different 
 // Product Release content only
 //*************************************************
 
+== EAP Configuration
+the following command allow request to endpoint `/jaxrs-client/rest` only if the request coming from localhost
+
+[source,options="nowrap"]
+----
+<expression-filter name="ip-access-filter" expression="ip-access-control(default-allow=false, acl={'127.0.0.1 allow'})"/>
+<filter-ref name="ip-access-filter" predicate="path-prefix('/jaxrs-client/rest')"/>
+
+/subsystem=undertow/configuration=filter/expression-filter=ip-access-filter:add(expression="ip-access-control(default-allow=false, acl={\'127.0.0.1 allow\'})")
+/subsystem=undertow/server=default-server/host=default-host/filter-ref=ip-access-filter:add(predicate="path-prefix('/jaxrs-client/rest')"
+----
+
+[source,options="nowrap"]
+----
+curl --interface en0  -X POST -d '{"name" : "mromani","phoneNumber" : "1234567"}'  -H "Content-Type: application/json"  http://localhost:8080/jaxrs-client/rest/contacts
+curl --interface en0  http://localhost:8080/jaxrs-client/rest/contacts/1
+----
+
 ifndef::EAPCDRelease[]
 
 //  System Requirements

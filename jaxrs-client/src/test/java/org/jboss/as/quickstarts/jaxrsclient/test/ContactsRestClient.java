@@ -16,9 +16,9 @@
  */
 package org.jboss.as.quickstarts.jaxrsclient.test;
 
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.logging.Logger;
+import org.jboss.as.quickstarts.jaxrsclient.model.Contact;
+import org.junit.Assert;
+
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -26,9 +26,9 @@ import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.jboss.as.quickstarts.jaxrsclient.model.Contact;
-import org.junit.Assert;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 public class ContactsRestClient {
 
@@ -40,13 +40,30 @@ public class ContactsRestClient {
 
     public static void main(String[] args) throws Exception {
         ContactsRestClient client = new ContactsRestClient();
-        client.cruedTest();
-        client.asyncCrudTest();
-        client.delayedInvocationTest();
-        client.invocationCallBackTest();
-        client.requestResponseFiltersTest();
+        client.builkLoadTest(5);
+        //client.cruedTest();
+        //client.asyncCrudTest();
+        //client.delayedInvocationTest();
+        //client.invocationCallBackTest();
+        //client.requestResponseFiltersTest();
 
     }
+
+
+
+    public void builkLoadTest(int items) {
+        log.info("### BULK LOAD tests ###");
+
+        for (int i = 0; i < items; i++) {
+            log.info("creating a new contact");
+            Contact c = new Contact();
+            c.setName(CONTACT_NAME+"_"+i);
+            c.setPhoneNumber(CONTACT_PHONE+"_"+i);
+            ClientBuilder.newClient().target(REST_TARGET_URL).request().post(Entity.entity(c, MediaType.APPLICATION_JSON), Contact.class);
+        }
+    }
+
+
 
     // This test shows basic operations
 
