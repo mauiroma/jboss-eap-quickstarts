@@ -19,20 +19,39 @@
    or testing only. It uses H2, a lightweight, in-memory, example database that
    ships with JBoss EAP. It is not robust or scalable, is not supported,
    and should NOT be used in a production environment! -->
+
 <datasources xmlns="http://www.jboss.org/ironjacamar/schema"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.jboss.org/ironjacamar/schema http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
-   <!-- The datasource is bound into JNDI at this location. We reference
-      this in META-INF/persistence.xml -->
+   <!--
+   The datasource is bound into JNDI at this location.
+   We reference this in META-INF/persistence.xml
+   -->
    <datasource jndi-name="java:jboss/datasources/HibernateQuickstartDS"
       pool-name="hibernate-quickstart" enabled="true"
       use-java-context="true">
+       <!--
       <connection-url>jdbc:h2:mem:hibernate-quickstart;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1</connection-url>
       <driver>h2</driver>
       <security>
          <user-name>sa</user-name>
          <password>sa</password>
       </security>
+      -->
+       <connection-url>jdbc:mysql://localhost:3306/EAP?useSSL=false&amp;allowPublicKeyRetrieval=true</connection-url>
+       <driver>mysql8</driver>
+       <pool>
+           <min-pool-size>5</min-pool-size>
+           <max-pool-size>50</max-pool-size>
+           <prefill>true</prefill>
+       </pool>
+       <security>
+           <user-name>eap</user-name>
+           <password>eap</password>
+       </security>
+       <validation>
+           <background-validation>true</background-validation>
+       </validation>
    </datasource>
 </datasources>
 

@@ -53,6 +53,7 @@ public class MemberController {
 
     public void register() {
         try {
+            System.out.println("Register new member ["+newMember.getName()+"]");
             memberRegistration.register(newMember);
             facesContext.addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered! on node ["+System.getProperty("jboss.node.name")+"]", "Registration successful"));
